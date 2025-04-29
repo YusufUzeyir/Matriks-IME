@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İnteraktif Staj Raporu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Style for the content display area */
+        #daily-content {
+            min-height: 300px; /* Ensure minimum height */
+        }
+        /* Ensure tables look good */
+        table {
+            border-collapse: collapse; /* Better borders */
+        }
+        th, td {
+            word-wrap: break-word; /* Prevent long text overflow */
+            max-width: 300px; /* Adjust as needed */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans p-5 md:p-10">
+
+    <h1 class="text-3xl font-bold text-center text-blue-700 mb-8">Staj Raporu - Yusuf Üzeyir Kaya (24 Mart - 4 Haziran 2025)</h1>
+
+    <div class="container mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-1 border-r border-gray-200 pr-4">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Haftalar</h2>
+                <div id="weekly-navigation" class="space-y-4">
+                    </div>
+            </div>
+
+            <div class="md:col-span-2 pl-4">
+                 <h2 class="text-xl font-semibold mb-4 text-gray-800">Günlük Detay</h2>
+                 <div id="daily-content-wrapper" class="bg-gray-50 p-4 rounded-md border border-gray-200 overflow-auto">
+                     <div id="daily-content" class="prose max-w-none">
+                         <p class="text-gray-500 italic">Detayları görmek için lütfen soldaki menüden bir hafta ve ardından bir gün seçin.</p>
+                         </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // Data Structure for Internship Report (Updated from ek.txt)
+        // =========================================================================
+        const reportData = {
+            "24/03/2025 - 29/03/2025": {
+                summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">24/03/2025 - 29/03/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">24/03/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Strateji Optimizasyonu: Grid Search Sonuçlarının Yorumlanması ve Analizi</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">25/03/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Strateji Optimizasyonu: Bayesian Optimizasyon Metodolojisi ve Kavramsal Anlatımı</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">26/03/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Optimizasyon Sonrası En İyi Parametre Seti ile Backtest ve Performans Karşılaştırması</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">27/03/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">Performans Metrikleri Derinlemesine İnceleme (Sharpe Oranı, Sortino Oranı vb.)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">28/03/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Aşırı Uyum (Overfitting) Kavramı ve Optimizasyonda Dikkat Edilmesi Gerekenler</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">29/03/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">40</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "24/03/25": {
+                        title: "Strateji Optimizasyonu: Grid Search Sonuçlarının Yorumlanması ve Analizi",
+                        description: "Geçen hafta başlattığım Grid Search optimizasyon çalışmasının sonuçlarını inceledim. AlgoTrader'ın sunduğu optimizasyon raporu üzerinden farklı parametre kombinasyonlarının getiri, maksimum drawdown, işlem sayısı gibi performans metriklerini nasıl etkilediğini analiz ettim. En yüksek getiriyi sağlayan parametre seti ile en dengeli (örneğin Sharpe oranı yüksek) parametre setinin farklı olabileceğini gözlemledim. Sonuçları Excel'e aktararak daha detaylı filtreleme ve sıralama işlemleri yaptım. Hangi parametrelerin strateji performansı üzerinde daha hassas olduğunu belirlemeye çalıştım. Optimizasyon sonuçlarını yorumlarken sadece tek bir metriğe odaklanmanın yanıltıcı olabileceğini, risk ve getirinin birlikte değerlendirilmesi gerektiğini öğrendim."
+                    },
+                    "25/03/25": {
+                        title: "Strateji Optimizasyonu: Bayesian Optimizasyon Metodolojisi ve Kavramsal Anlatımı",
+                        description: "Grid Search yönteminin tüm kombinasyonları denemesi nedeniyle özellikle çok sayıda parametre olduğunda zaman alıcı olabileceğini fark ettim. Alternatif bir yöntem olan Bayesian Optimizasyon'un temel mantığını araştırdım. Bu yöntemin, önceki denemelerin sonuçlarını kullanarak bir sonraki denenecek parametre setini akıllıca seçtiğini ve böylece daha az deneme ile optimuma yakın sonuçlar bulmayı hedeflediğini öğrendim. Özellikle karmaşık ve çok parametreli stratejilerde Grid Search'e göre daha verimli olabileceği anlatıldı. AlgoTrader platformunda bu optimizasyon türünün nasıl seçileceğini ve temel ayarlarını inceledim. Ancak bu yöntemin de kendi içinde bazı varsayımları ve potansiyel dezavantajları (yerel optimuma takılma riski gibi) olduğunu not ettim."
+                    },
+                     "26/03/25": {
+                        title: "Optimizasyon Sonrası En İyi Parametre Seti ile Backtest ve Performans Karşılaştırması",
+                        description: "Grid Search optimizasyonu sonucunda belirlediğim en iyi (dengeli) parametre setini kullanarak stratejinin backtest'ini tekrar çalıştırdım. Optimizasyon öncesi varsayılan parametrelerle yapılan backtest sonuçları ile optimize edilmiş parametrelerle yapılan backtest sonuçlarını karşılaştırdım. Getiri eğrisi, maksimum drawdown, karlı işlem oranı gibi metriklerdeki iyileşmeleri veya değişimleri gözlemledim. Optimizasyonun strateji performansını nasıl etkilediğini somut olarak gördüm. Farklı bir parametre setinin (örneğin sadece en yüksek getiriyi hedefleyen) backtest sonuçlarını da çalıştırarak, farklı optimizasyon hedeflerinin sonuçları nasıl değiştirdiğini analiz ettim. Bu çalışma, optimizasyonun önemini ve doğru parametre seçiminin strateji başarısındaki rolünü pekiştirdi."
+                    },
+                    "27/03/25": {
+                        title: "Performans Metrikleri Derinlemesine İnceleme (Sharpe Oranı, Sortino Oranı vb.)",
+                        description: "Backtest raporlarında sıkça karşılaşılan ancak anlamlarını tam olarak bilmediğim bazı performans metriklerini detaylı olarak araştırdım. Özellikle Sharpe Oranı'nın, alınan riske göre elde edilen getiriyi ölçen standart bir metrik olduğunu öğrendim. Risksiz faiz oranı varsayımı ve hesaplama yöntemini inceledim. Sortino Oranı'nın ise Sharpe Oranı'na benzediğini ancak sadece aşağı yönlü riski (negatif volatiliteyi) dikkate aldığını, bu nedenle özellikle aşağı yönlü riskten kaçınan yatırımcılar için daha anlamlı olabileceğini kavradım. Kazanç Faktörü (Profit Factor), Ortalama İşlem Başına Getiri gibi diğer metriklerin de stratejinin karlılığını ve verimliliğini farklı açılardan değerlendirdiğini anladım. Bu metrikleri doğru yorumlamanın, stratejileri objektif bir şekilde karşılaştırmak ve değerlendirmek için gerekli olduğunu öğrendim."
+                    },
+                    "28/03/25": {
+                        title: "Aşırı Uyum (Overfitting) Kavramı ve Optimizasyonda Dikkat Edilmesi Gerekenler",
+                        description: "Optimizasyon yaparken karşılaşılabilecek en önemli risklerden biri olan \"aşırı uyum\" (overfitting) kavramını öğrendim. Bir stratejinin geçmiş veriye aşırı optimize edilmesi durumunda, gelecekteki (görülmemiş) veriler üzerinde iyi performans göstermeme riskinin yüksek olduğunu anladım. Aşırı uyumu tespit etmek veya riskini azaltmak için kullanılabilecek yöntemleri (örneğin, veri setini eğitim ve test olarak ayırmak -ki AlgoTrader bunu eğitim/test bölgesi ile yapıyor-, ileriye dönük test -walk-forward testing-, parametre sayısını sınırlı tutmak) araştırdım. Optimizasyon sırasında bulunan \"en iyi\" parametre setinin her zaman gelecekte de en iyi olacağının garantisi olmadığını, stratejinin sağlamlığının (robustness) test edilmesinin önemini kavradım. Optimizasyonun dikkatli ve bilinçli yapılması gereken bir süreç olduğunu anladım."
+                    }
+                }
+            },
+            "31/03/2025 - 05/04/2025": {
+                summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">31/03/2025 - 05/04/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">31/03/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Indicator Builder Ortamına Giriş ve Temel Yapısı</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">01/04/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Indicator Builder: Basit Bir İndikatör Oluşturma (Örn: Fark İndikatörü)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">02/04/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Indicator Builder: Parametre Ekleme ve Kullanımı ([Parameter], [DefaultValue])</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">03/04/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">Indicator Builder: OnInit() ve OnDataUpdate() Metotlarının Kullanımı</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">04/04/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Indicator Builder: Hesaplanan Değerlerin Çizdirilmesi (SetLine())</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">05/04/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">40</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "31/03/25": {
+                        title: "Indicator Builder Ortamına Giriş ve Temel Yapısı",
+                        description: "Bu hafta MatriksIQ platformunun güçlü özelliklerinden biri olan \"Indicator Builder\" ile kendi özel indikatörlerimi nasıl oluşturabileceğimi öğrenmeye başladım. Öncelikle IQAlgo menüsünden \"Yeni İndikatör Tanımla\" adımını kullanarak Indicator Builder arayüzünü açtım. Arayüzün, standart AlgoTrader C# modülüne benzediğini ancak indikatör oluşturmaya özel bazı ek yapılar ve metotlar içerdiğini gördüm. Temel sınıf yapısını, [IndicatorInformation] ve [IndicatorLineInformation] gibi attribute'ların (özniteliklerin) indikatörün adını, grafikte nerede gösterileceğini ve çizgilerinin isimlerini tanımlamak için nasıl kullanıldığını inceledim. Kendi indikatörlerimizi yazabilmenin, standart indikatörlerin yetersiz kaldığı durumlarda veya tamamen özgün analizler yapmak istediğimizde büyük bir esneklik sağladığını anladım. Yardım dosyasındaki Indicator Builder bölümünü incelemeye başladım."
+                    },
+                    "01/04/25": {
+                        title: "Indicator Builder: Basit Bir İndikatör Oluşturma (Örn: Fark İndikatörü)",
+                        description: "Indicator Builder'ın temel yapısını anladıktan sonra, basit bir örnekle pratik yapmaya karar verdim. İki farklı hareketli ortalamanın (örneğin EMA(10) ve EMA(20)) farkını alan ve bu farkı tek bir çizgi olarak gösteren bir indikatör oluşturmaya çalıştım. OnInit() metodu içinde iki EMA indikatörünü tanımladım. OnDataUpdate(int currentBar, decimal inputValue, DateTime barDateTime) metodunun, ana grafiğe eklenen her yeni bar verisiyle tetiklendiğini ve inputValue parametresinin seçilen OHLC tipine (genellikle Close) göre barın değerini taşıdığını öğrendim. Bu metot içinde, tanımladığım EMA'ların CurrentValue'larını kullanarak farkı hesapladım ve bu fark değerini indikatörün kendi çizgisine atamak için SetLine() metodunu kullandım. SetLine(0, currentBar, farkDegeri) çağrısının, indikatörün 0. indeksli (ilk) çizgisine, güncel bar için hesaplanan fark değerini atadığını anladım. İndikatörü derleyip grafikte nasıl göründüğünü test ettim."
+                    },
+                    "02/04/25": {
+                        title: "Indicator Builder: Parametre Ekleme ve Kullanımı ([Parameter], [DefaultValue])",
+                        description: "Oluşturduğum basit fark indikatörünü daha esnek hale getirmek için parametre eklemeyi öğrendim. EMA periyotlarını sabit değerler (10 ve 20) yerine kullanıcı tarafından ayarlanabilir hale getirmek istedim. Bunun için, class tanımının içine public int EmaPeriod1; ve public int EmaPeriod2; şeklinde public değişkenler tanımladım. Bu değişkenlerin indikatör ayarları penceresinde görünmesi ve ayarlanabilmesi için başlarına [Parameter] attribute'unu ekledim. Ayrıca, varsayılan değerler atamak için [DefaultValue(10)] ve [DefaultValue(20)] attribute'larını kullandım. OnInit() içinde EMA'ları tanımlarken artık sabit değerler yerine bu public değişkenleri (EmaPeriod1, EmaPeriod2) kullandım. Bu sayede, kullanıcıların indikatörü grafiğe eklerken veya ayarlardan değiştirirken farklı EMA periyotları deneyebilmesini sağladım. Int, Decimal, Bool ve Enum tiplerinde parametreler tanımlanabileceğini öğrendim."
+                    },
+                    "03/04/25": {
+                        title: "Indicator Builder: OnInit() ve OnDataUpdate() Metotlarının Kullanımı",
+                        description: "Indicator Builder'daki OnInit() ve OnDataUpdate() metotlarının rollerini daha detaylı inceledim. OnInit()'in sadece indikatör grafiğe ilk eklendiğinde veya parametreleri değiştirildiğinde çalıştığını, bu nedenle indikatör nesnelerinin (örnekteki EMA'lar gibi) burada oluşturulması gerektiğini tekrar ettim. OnDataUpdate()'in ise ana grafikteki her bar verisi için çalıştığını, bu yüzden hesaplamaların (EMA farkını almak gibi) ve çizim güncellemelerinin (SetLine()) burada yapılması gerektiğini pekiştirdim. OnDataUpdate içindeki currentBar parametresinin, indikatörün hesaplandığı mevcut barın indeksi olduğunu ve inputValue'nun o barın (genellikle kapanış) değeri olduğunu tekrar not ettim. İndikatörün doğru çalışması için bu iki metodun görev ayrımını doğru yapmanın kritik olduğunu anladım. Geçmiş değerlere erişim için GetBarData() fonksiyonunun Indicator Builder içinde de kullanılabileceğini gördüm."
+                    },
+                    "04/04/25": {
+                        title: "Indicator Builder: Hesaplanan Değerlerin Çizdirilmesi (SetLine())",
+                        description: "SetLine(int lineIndex, int barIndex, decimal value) metodunun kullanımını detaylandırdım. lineIndex parametresinin, [IndicatorLineInformation] attribute'unda tanımlanan çizgilerden hangisine değer atanacağını belirttiğini (0'dan başlayarak), barIndex'in hangi bar için değer atandığını (OnDataUpdate içindeki currentBar genellikle kullanılır) ve value'nun ise o bar için çizilecek olan hesaplanmış indikatör değeri olduğunu öğrendim. Çoklu çizgiye sahip bir indikatör (örneğin kendi Bollinger Bandımı yazmak istesem) yazmak için OnInit içinde Lines.SetCount(3) gibi bir tanımlama yapıp, OnDataUpdate içinde her çizgi için ayrı ayrı SetLine(0, ...) , SetLine(1, ...) , SetLine(2, ...) çağrıları yapmam gerektiğini anladım. Grafikte indikatörün doğru görüntülenmesi için her bar için ilgili SetLine çağrısının yapılması gerektiğini kavradım. Bu hafta Indicator Builder'ın temellerini ve basit indikatör oluşturma adımlarını tamamlamış oldum."
+                    }
+                }
+            },
+            "07/04/2025 - 12/04/2025": {
+                summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">07/04/2025 - 12/04/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">07/04/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Indicator Builder: İleri Çizim Teknikleri (SetPointTitle - Metin)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">08/04/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Indicator Builder: İleri Çizim Teknikleri (SetPointTitle - İkon)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">09/04/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Özel İndikatörün AlgoTrader Stratejisinde Kullanımı</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">10/04/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">Özel İndikatör ile Basit Bir Alım-Satım Stratejisi Geliştirme</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">11/04/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Geliştirilen Özel İndikatör ve Stratejinin Test Edilmesi ve Değerlendirilmesi</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">12/04/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">40</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                 days: {
+                    "07/04/25": {
+                        title: "Indicator Builder: İleri Çizim Teknikleri (SetPointTitle - Metin)",
+                        description: "Bugün Indicator Builder'ın daha gelişmiş görselleştirme yeteneklerini inceledim. Özellikle SetPointTitle() fonksiyonunun, indikatör çizgisi üzerindeki belirli noktalara metin etiketleri eklemek için nasıl kullanıldığını öğrendim. Fonksiyonun aldığı parametreleri (lineIndex, barIndex, title, chartLocation, value, isDrawQuad, textColor) detaylıca inceledim. lineIndex ve barIndex ile etiketin hangi çizgi üzerinde ve hangi barda konumlanacağını, title ile yazılacak metni, chartLocation (örn. IconLocation.BelowBar) ile metnin barın altına mı üstüne mi yerleşeceğini belirleyebildiğimi gördüm. value parametresi ile metnin Y eksenindeki konumunu ayarlayabildiğimi, isDrawQuad ile metin etrafına çerçeve çizdirip çizdirmeyeceğimi ve textColor ile metin rengini belirleyebildiğimi anladım. Bu fonksiyonun, indikatörün önemli seviyelerini veya sinyal ürettiği noktaları grafikte vurgulamak için kullanışlı olduğunu fark ettim."
+                    },
+                    "08/04/25": {
+                        title: "Indicator Builder: İleri Çizim Teknikleri (SetPointTitle - İkon)",
+                        description: "Dün öğrendiğim SetPointTitle() fonksiyonunun metin yerine ikon eklemek için kullanılan overload (aşırı yüklenmiş) versiyonunu inceledim. Bu versiyonda title parametresi yerine IndicatorIconStyle tipinde bir iconStyle parametresi aldığını gördüm. Bu sayede, IndicatorIconStyle.Buy, IndicatorIconStyle.Sell, IndicatorIconStyle.Stop gibi sistemde tanımlı ikonları indikatör üzerinde belirli noktalara yerleştirebileceğimi öğrendim. Diğer parametrelerin (lineIndex, barIndex, chartLocation, value, isDrawQuad, textColor) metin ekleyen versiyonla aynı işlevi gördüğünü fark ettim. Kendi yazdığım fark indikatöründe, farkın sıfır çizgisini yukarı kestiği barlara Buy ikonu, aşağı kestiği barlara Sell ikonu ekleyen bir deneme yaptım. Bu özelliğin, alım-satım sinyallerini grafikte çok daha belirgin hale getirdiğini gözlemledim."
+                    },
+                    "09/04/25": {
+                        title: "Özel İndikatörün AlgoTrader Stratejisinde Kullanımı",
+                        description: "Indicator Builder ile oluşturduğum ve derlediğim özel \"Fark İndikatörü\"nü (EMA10-EMA20 farkı) bir AlgoTrader stratejisi içinde nasıl kullanacağımı öğrendim. Özel indikatörlerin, derlendikten sonra standart indikatörler gibi AlgoTrader C# modülünün sol tarafındaki \"Araç Kutusu\"nda \"Kullanıcı İndikatörleri\" altında listelendiğini gördüm. Strateji kodunda, OnInit() metodu içinde, standart bir indikatör tanımlar gibi (örneğin FarkIndikatoru farkInd = FarkIndikatoru(Symbol, SymbolPeriod, 10, 20); şeklinde) özel indikatörümü çağırabileceğimi anladım. Burada parantez içindeki 10 ve 20 değerlerinin, Indicator Builder'da [Parameter] olarak tanımladığım EmaPeriod1 ve EmaPeriod2'ye karşılık geldiğini fark ettim. OnDataUpdate() içinde de farkInd.CurrentValue gibi özelliklere erişerek indikatörün güncel değerini okuyabileceğimi öğrendim."
+                    },
+                    "10/04/25": {
+                        title: "Özel İndikatör ile Basit Bir Alım-Satım Stratejisi Geliştirme",
+                        description: "Oluşturduğum \"Fark İndikatörü\"nü kullanarak basit bir alım-satım stratejisi kodladım. Stratejinin mantığı şu şekildeydi: Fark indikatörünün değeri (EMA10-EMA20) sıfır çizgisini yukarı keserse (yani EMA10, EMA20'nin üzerine çıkarsa) AL emri gönder, sıfır çizgisini aşağı keserse (yani EMA10, EMA20'nin altına inerse) SAT emri (veya açık pozisyonu kapat) gönder. Bu mantığı OnDataUpdate() içinde CrossAbove(farkInd, 0) ve CrossBelow(farkInd, 0) koşulları ile yazdım. Koşullar sağlandığında SendMarketOrder() fonksiyonu ile emirleri gönderdim. Pozisyon yönetimi eklemedim, sadece temel alım-satım sinyallerini üreten bir yapı oluşturdum. Kendi yazdığım bir indikatörü kullanarak sıfırdan bir strateji geliştirme deneyimi kazandım."
+                    },
+                    "11/04/25": {
+                        title: "Geliştirilen Özel İndikatör ve Stratejinin Test Edilmesi ve Değerlendirilmesi",
+                        description: "Dün kodladığım, kendi özel \"Fark İndikatörü\"me dayalı basit alım-satım stratejisinin backtest'ini çalıştırdım. Farklı semboller ve periyotlar (günlük, 60dk) üzerinde testler yaparak stratejinin performansını gözlemledim. Backtest raporundaki getiri eğrisini, işlem listesini ve performans metriklerini inceledim. Stratejinin bazı durumlarda karlı işlemler yapsa da genel olarak çok sayıda hatalı sinyal ürettiğini (whipsaw) ve bunun backtest sonucunu olumsuz etkilediğini gördüm. Bu basit stratejinin tek başına yeterli olmadığını, ek filtreler (örneğin başka bir trend indikatörü ile teyit) veya daha gelişmiş giriş/çıkış kuralları eklenmesi gerektiğini anladım. Bu çalışma, bir fikrin veya indikatörün stratejiye dönüştürülmesinin ilk adım olduğunu, ancak başarılı bir strateji için kapsamlı test ve iyileştirme gerektiğini gösterdi."
+                    }
+                }
+            },
+            "14/04/2025 - 19/04/2025": {
+                summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">14/04/2025 - 19/04/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">14/04/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Sentetik Emirler: Stop-Loss (StopLoss()) Kullanımı ve Parametreleri</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">15/04/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Sentetik Emirler: Take-Profit (TakeProfit()) Kullanımı ve Parametreleri</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">16/04/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Sentetik Emirler: Trailing Stop-Loss (TrailingStopLoss()) Kullanımı ve Mantığı</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">17/04/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">Sentetik Emirlerin Stratejiye Entegrasyonu ve Backtest Üzerindeki Etkileri</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">18/04/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Sentetik Emir Yönetimi: İptal Fonksiyonları (CancelStopLoss(), CancelTakeProfit())</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">19/04/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">40</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "14/04/25": {
+                        title: "Sentetik Emirler: Stop-Loss (StopLoss()) Kullanımı ve Parametreleri",
+                        description: "Bu hafta AlgoTrader'ın önemli özelliklerinden olan sentetik emirleri öğrenmeye başladım. İlk olarak StopLoss() fonksiyonunu inceledim. Bu fonksiyonun, belirli bir sembol için ana alış/satış emrinden bağımsız olarak bir zarar durdurma seviyesi tanımlamak için kullanıldığını öğrendim. Fonksiyonun aldığı parametreleri (string symbol, SyntheticOrderPriceType, decimal stopLevel) detaylıca inceledim. SyntheticOrderPriceType ile stop seviyesinin fiyat farkı (PricePoint) olarak mı yoksa yüzdesel fark (Percent) olarak mı belirleneceğini seçebildiğimizi anladım. stopLevel parametresi ile de bu farkın değerini girdiğimizi öğrendim. Örneğin, StopLoss(Symbol, SyntheticOrderPriceType.Percent, 2.5m) çağrısının, pozisyona girdikten sonra %2.5'lik bir zararda pozisyonu otomatik olarak market emriyle kapatacağını kavradım. Sembol başına sadece bir adet Stop-Loss tanımlanabileceğini ve yeni bir tanım eskisini geçersiz kıldığını not ettim."
+                    },
+                    "15/04/25": {
+                        title: "Sentetik Emirler: Take-Profit (TakeProfit()) Kullanımı ve Parametreleri",
+                        description: "Dün öğrendiğim Stop-Loss'a benzer şekilde çalışan TakeProfit() fonksiyonunu inceledim. Bu fonksiyonun, belirli bir sembol için hedeflenen kar seviyesine ulaşıldığında pozisyonu otomatik olarak kapatmak amacıyla kullanıldığını öğrendim. Aldığı parametrelerin (string symbol, SyntheticOrderPriceType, decimal stopLevel) StopLoss ile aynı olduğunu gördüm. SyntheticOrderPriceType ile kar alma seviyesinin fiyatsal veya yüzdesel fark olarak belirlenebildiğini, stopLevel ile de bu farkın değerinin girildiğini anladım. Örneğin, TakeProfit(Symbol, SyntheticOrderPriceType.PricePoint, 1.50m) çağrısının, pozisyona giriş fiyatının 1.50 birim üzerine çıkıldığında (long pozisyon için) pozisyonu market emriyle kapatacağını öğrendim. Stop-Loss gibi, sembol başına sadece bir adet Take-Profit tanımlanabileceğini ve yenisinin eskisini üzerine yazacağını not ettim."
+                    },
+                    "16/04/25": {
+                        title: "Sentetik Emirler: Trailing Stop-Loss (TrailingStopLoss()) Kullanımı ve Mantığı",
+                        description: "Bugün, daha dinamik bir zarar durdurma mekanizması olan TrailingStopLoss() (İz Süren Zarar Durdur) fonksiyonunu öğrendim. Bu fonksiyonun, normal StopLoss gibi çalıştığını ancak fiyat lehimize hareket ettikçe stop seviyesini de belirli bir mesafeyi koruyarak yukarı (long pozisyon için) veya aşağı (short pozisyon için) taşıdığını anladım. Fiyat tersine döndüğünde ise stop seviyesinin sabit kaldığını ve fiyat bu seviyeye dokunduğunda pozisyonun kapatıldığını kavradım. Aldığı parametrelerin (string symbol, SyntheticOrderPriceType, decimal stopLevel) diğer sentetik emirlerle aynı olduğunu öğrendim. stopLevel'in burada iz sürme mesafesini (fiyat farkı veya yüzdesi) belirttiğini anladım. Örneğin, TrailingStopLoss(Symbol, SyntheticOrderPriceType.Percent, 3m) kullanımının, fiyat en yüksek gördüğü seviyeden %3 aşağı düştüğünde pozisyonu kapatacağını öğrendim. Bu yöntemin, karları kilitlemek ve ani düşüşlerden korunmak için etkili olabileceğini fark ettim."
+                    },
+                    "17/04/25": {
+                        title: "Sentetik Emirlerin Stratejiye Entegrasyonu ve Backtest Üzerindeki Etkileri",
+                        description: "Daha önce geliştirdiğim basit Fark İndikatörü stratejisine bu hafta öğrendiğim sentetik emirleri entegre ettim. Alış emri gönderdikten hemen sonra %2lik bir StopLoss ve %5lik bir TakeProfit tanımladım. Stratejinin backtest'ini bu yeni haliyle çalıştırdım. Backtest raporu ve işlem listesini incelediğimde, sentetik emirlerin işlemlerin kapanışını nasıl otomatikleştirdiğini ve stratejinin risk/getiri profilini nasıl değiştirdiğini gözlemledim. Stop-Loss'un büyük zararları engellediğini, Take-Profit'in ise belirlenen hedefe ulaşılınca karı realize ettiğini gördüm. Trailing Stop-Loss'u da deneyerek, trend devam ederken stop seviyesinin nasıl yukarı taşındığını ve karı nasıl koruduğunu analiz ettim. Sentetik emirlerin, strateji yönetimini kolaylaştırdığını ve risk kontrolü için vazgeçilmez araçlar olduğunu anladım."
+                    },
+                    "18/04/25": {
+                        title: "Sentetik Emir Yönetimi: İptal Fonksiyonları (CancelStopLoss(), CancelTakeProfit())",
+                        description: "Sentetik emirlerin sadece tanımlanması değil, aynı zamanda strateji içinde dinamik olarak yönetilmesi gerektiğini öğrendim. Özellikle pozisyon kapatıldığında veya strateji mantığı değiştiğinde aktif olan sentetik emirlerin iptal edilmesi gerektiğini fark ettim. Bu amaçla CancelStopLoss(string symbol), CancelTakeProfit(string symbol) ve CancelTrailingStopLoss(string symbol) fonksiyonlarının kullanıldığını öğrendim. Örneğin, bir pozisyonu manuel olarak veya farklı bir strateji koşulu ile kapattığımda, o sembol için daha önce tanımlanmış olan Stop-Loss veya Take-Profit emrinin hala aktif kalabileceğini ve istenmeyen bir emri tetikleyebileceğini anladım. Bu nedenle, pozisyon kapatma işlemlerinden sonra ilgili iptal fonksiyonlarını çağırmanın iyi bir pratik olduğunu öğrendim. Strateji içinde sentetik emirlerin yaşam döngüsünü (tanımlama, aktif olma, tetiklenme veya iptal edilme) yönetmenin önemini kavradım."
+                    }
+                }
+            },
+            "21/04/2025 - 26/04/2025": {
+                 summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">21/04/2025 - 26/04/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">21/04/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Risk Yönetimi: Pozisyon Büyüklüğü Hesaplama Yöntemleri (Sabit Lot, Sabit Tutar)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">22/04/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Risk Yönetimi: Riskin Yüzdesine Göre Pozisyon Büyüklüğü Hesaplama</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">23/04/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Resmi Tatil (Ulusal Egemenlik ve Çocuk Bayramı)</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr><td class="border px-3 py-2">24/04/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">Risk Yönetimi: Maksimum Drawdown Kontrolü ve Stratejiyi Durdurma</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">25/04/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Risk Yönetimi Stratejilerinin Backtest ile Değerlendirilmesi</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">26/04/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">32</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "21/04/25": {
+                        title: "Risk Yönetimi: Pozisyon Büyüklüğü Hesaplama Yöntemleri (Sabit Lot, Sabit Tutar)",
+                        description: "Stratejilerde risk yönetiminin en önemli unsurlarından biri olan pozisyon büyüklüğü belirleme yöntemlerini inceledim. En basit yöntemlerin başında her işlemde sabit bir lot veya kontrat sayısı (OrderQuantity parametresi) ile işlem yapmanın geldiğini gördüm. Alternatif olarak, her işlem için sabit bir parasal tutar (örneğin 10.000 TL) ayırarak pozisyon büyüklüğünü (amount = 10000; quantity = amount / currentPrice;) hesaplama yöntemini öğrendim. Bu basit yöntemlerin uygulanmasının kolay olduğunu ancak piyasa volatilitesini veya hesap bakiyesindeki değişimleri dikkate almadığı için risk seviyesini sabit tutmadığını fark ettim. Özellikle kaldıraçlı piyasalarda sabit lot ile işlem yapmanın büyük riskler taşıyabileceğini anladım. Bu temel yöntemleri kod üzerinde nasıl uygulayacağımı denedim."
+                    },
+                    "22/04/25": {
+                        title: "Risk Yönetimi: Riskin Yüzdesine Göre Pozisyon Büyüklüğü Hesaplama",
+                        description: "Daha gelişmiş bir pozisyon büyüklüğü belirleme yöntemi olan, her işlemde riske edilecek maksimum tutarı hesap bakiyesinin belirli bir yüzdesi (örn. %1, %2) olarak belirleme yöntemini öğrendim. Bu yöntemde öncelikle stop-loss seviyesinin belirlenmesi gerektiğini (fiyatsal olarak), ardından 1 lot/kontrat için potansiyel zararın (giriş fiyatı - stop fiyatı) hesaplandığını öğrendim. Sonrasında, hesap bakiyesinin belirlenen risk yüzdesi ile çarpılarak o işlem için riske edilebilecek maksimum parasal tutarın bulunduğunu gördüm. Son olarak, riske edilecek maksimum tutarın, 1 lot için potansiyel zarara bölünerek işlem yapılacak lot/kontrat sayısının (quantity = maxRiskAmount / lossPerLot;) hesaplandığını anladım. Bu yöntemin, hesap bakiyesi değiştikçe ve stop mesafesi değiştikçe pozisyon büyüklüğünü dinamik olarak ayarlayarak risk seviyesini daha tutarlı tutmayı sağladığını kavradım. C# kodu üzerinde bu hesaplamayı gerçekleştiren bir fonksiyon taslağı oluşturdum."
+                    },
+                    "24/04/25": {
+                        title: "Risk Yönetimi: Maksimum Drawdown Kontrolü ve Stratejiyi Durdurma",
+                        description: "Stratejinin genel performansı üzerindeki riski yönetmek için maksimum drawdown (geri çekilme) takibinin önemini öğrendim. Backtest raporlarında hesaplanan bu değerin, stratejinin zirve noktasından yaşadığı en büyük düşüşü gösterdiğini tekrar ettim. Canlı çalışan bir stratejide de toplam sermayenin veya başlangıç sermayesinin belirli bir yüzdesinden fazla düşüş yaşanması durumunda (örneğin %15-%20 drawdown) stratejinin otomatik olarak durdurulmasının bir risk yönetimi kuralı olarak uygulanabileceğini tartıştık. AlgoTrader'da GetOverall() fonksiyonu ile stratejinin anlık performans verilerine erişilebildiğini ve bu veriler kullanılarak (overall.Equity, overall.StartingEquity) drawdown hesaplamasının yapılabileceğini ve belirlenen eşik aşıldığında StopStrategy() fonksiyonu ile stratejinin durdurulabileceğini öğrendim. Bu tür bir kontrolün, beklenmedik piyasa koşullarında veya stratejinin artık çalışmadığı durumlarda büyük kayıpları önleyebileceğini anladım."
+                    },
+                    "25/04/25": {
+                        title: "Risk Yönetimi Stratejilerinin Backtest ile Değerlendirilmesi",
+                        description: "Bu hafta öğrendiğim farklı pozisyon büyüklüğü yöntemlerini (sabit lot, sabit tutar, risk yüzdesi) daha önce geliştirdiğim stratejiye uygulayarak ayrı ayrı backtestler çalıştırdım. Farklı risk yönetimi yaklaşımlarının stratejinin genel getirisini, işlem sayısını, maksimum drawdown'unu ve diğer performans metriklerini nasıl etkilediğini karşılaştırdım. Risk yüzdesine dayalı yöntemin genellikle daha tutarlı bir risk profili sunduğunu ancak bazen getiriyi sınırlayabildiğini gözlemledim. Sabit lot yönteminin ise özellikle kaldıraçlı piyasalarda veya volatil dönemlerde drawdown'u önemli ölçüde artırabildiğini gördüm. Stratejiye uygun risk yönetimi yöntemini seçmenin, stratejinin kendisi kadar önemli olduğunu ve genel başarıyı doğrudan etkilediğini anladım. Backtest sonuçlarını analiz ederek farklı risk parametrelerinin (örn. %1 risk vs %2 risk) etkilerini de değerlendirdim."
+                    }
+                 }
+            },
+             "28/04/2025 - 03/05/2025": {
+                summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">28/04/2025 - 03/05/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">28/04/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Kod Kalitesi: Okunabilirlik ve İsimlendirme Standartları</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">29/04/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Kod Kalitesi: Tekrarlanan Kodları Fonksiyonlarla Azaltma (Refactoring)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">30/04/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Kod Kalitesi: Yorum Satırları ve Dokümantasyonun Önemi</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">01/05/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">Resmi Tatil (Emek ve Dayanışma Günü)</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr><td class="border px-3 py-2">02/05/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Kod Kalitesi: Basit Fonksiyon Yazma ve Strateji İçinde Kullanma</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">03/05/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">32</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "28/04/25": {
+                        title: "Kod Kalitesi: Okunabilirlik ve İsimlendirme Standartları",
+                        description: "Yazılan kodun sadece çalışması değil, aynı zamanda anlaşılır ve bakımı kolay olmasının da önemini öğrendim. Bu bağlamda kod okunabilirliğini artırmaya yönelik prensipler üzerine çalıştım. Değişken, fonksiyon ve class isimlerinin anlamlı ve tutarlı olması gerektiğini (örneğin, rsiPeriod gibi camelCase veya RsiPeriod gibi PascalCase standartları), sihirli sayılar (magic numbers) yerine anlamlı sabitler (constants) kullanılmasını, kod bloklarının girintilemesinin (indentation) düzgün yapılmasını tartıştık. Karmaşık koşulları veya hesaplamaları daha küçük, anlaşılır parçalara bölmenin kodun okunabilirliğini nasıl artırdığını gördüm. İyi yazılmış kodun, hem kendimiz hem de ekipteki diğer kişiler için hata ayıklamayı ve gelecekteki değişiklikleri yapmayı kolaylaştırdığını anladım. Daha önce yazdığım strateji kodlarını bu prensiplere göre gözden geçirdim."
+                    },
+                    "29/04/25": {
+                        title: "Kod Kalitesi: Tekrarlanan Kodları Fonksiyonlarla Azaltma (Refactoring)",
+                        description: "Kod içinde tekrar eden mantık bloklarının (\"code duplication\") kodun bakımını zorlaştırdığını ve hata yapma olasılığını artırdığını öğrendim. Bu tür tekrarlanan kod parçalarını tespit edip bunları ayrı bir fonksiyona taşıyarak kod tekrarını azaltma işlemi olan \"refactoring\" (yeniden düzenleme) kavramını inceledim. Örneğin, hem alış hem de satış koşullarında benzer bir risk hesaplaması veya emir gönderme mantığı varsa, bunu tek bir fonksiyona alıp her iki yerden de bu fonksiyonu çağırmanın kodun daha temiz ve yönetilebilir olmasını sağladığını gördüm. Fonksiyonlara anlamlı isimler vermenin ve fonksiyonların tek bir işlevi yerine getirmesinin (Single Responsibility Principle) önemini tartıştık. Daha önce yazdığım stratejilerden birinde tekrarlanan bir bölümü tespit edip bunu ayrı bir private metoda taşıyarak basit bir refactoring uygulaması yaptım."
+                    },
+                    "30/04/25": {
+                        title: "Kod Kalitesi: Yorum Satırları ve Dokümantasyonun Önemi",
+                        description: "Kodun ne yaptığını sadece kodun kendisi değil, aynı zamanda eklenen yorum satırları ve dokümantasyonun da açıklaması gerektiğini öğrendim. Yorum satırlarının, kodun neden o şekilde yazıldığını veya karmaşık bir mantığı açıklamak için kullanılması gerektiğini, ne yaptığını zaten kodun kendisinin anlatması gerektiğini tartıştık. Aşırı veya gereksiz yorumlardan kaçınılması, ancak önemli kararları, varsayımları veya karmaşık algoritmaları açıklayan yorumların faydalı olduğunu anladım. Özellikle public metotlar veya class'lar için XML dokümantasyon yorumlarının (/// <summary>...) nasıl kullanıldığını ve bunun IntelliSense tarafından nasıl gösterildiğini inceledim. İyi dokümante edilmiş kodun, hem başkaları tarafından anlaşılmasını kolaylaştırdığını hem de gelecekte kendi kodumuzu hatırlamamıza yardımcı olduğunu kavradım."
+                    },
+                    "02/05/25": {
+                        title: "Kod Kalitesi: Basit Fonksiyon Yazma ve Strateji İçinde Kullanma",
+                        description: "Kod tekrarını azaltmak ve kodu daha modüler hale getirmek için kendi yardımcı fonksiyonlarımı nasıl yazabileceğimi öğrendim. Strateji class'ı içinde private erişim belirleyicisi ile basit fonksiyonlar tanımladım. Örneğin, belirli bir sembol için pozisyon olup olmadığını kontrol eden HasPosition(string symbol) veya belirli bir koşul sağlandığında debug mesajı yazdıran basit bir loglama fonksiyonu yazdım. Bu fonksiyonları OnDataUpdate gibi ana metotlar içerisinden çağırdım. Fonksiyonlara parametre geçme ve fonksiyondan değer döndürme (return) mekanizmalarını tekrar ettim. Kendi fonksiyonlarımı yazmanın, OnDataUpdate gibi ana metotların daha kısa ve okunabilir kalmasını sağladığını, ayrıca aynı mantığı farklı yerlerde kullanmam gerektiğinde kod tekrarını önlediğini pratik olarak gördüm."
+                    }
+                }
+            },
+            "05/05/2025 - 10/05/2025": {
+                 summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">05/05/2025 - 10/05/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">05/05/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Yazılım Test Prensipleri: Birim Test (Unit Testing) Kavramı ve Önemi</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">06/05/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Yazılım Test Prensipleri: Entegrasyon Testi Kavramı ve Strateji Bağlamı</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">07/05/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">AlgoTrader'da Strateji Testi: Backtest'in Bir Test Yöntemi Olarak Kullanımı</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">08/05/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">Test Senaryoları Oluşturma: Farklı Piyasa Koşulları (Trend, Yatay, Volatil)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">09/05/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Kenar Durum (Edge Case) Testleri ve Strateji Sağlamlığının Önemi</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">10/05/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">40</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "05/05/25": {
+                        title: "Yazılım Test Prensipleri: Birim Test (Unit Testing) Kavramı ve Önemi",
+                        description: "Yazılım geliştirme sürecinin önemli bir parçası olan test etme konusuna giriş yaptım. Özellikle Birim Test (Unit Testing) kavramını öğrendim. Kodun en küçük, bağımsız çalışabilen parçalarının (genellikle metotlar veya fonksiyonlar) doğruluğunu test etme yaklaşımı olduğunu anladım. Örneğin, yazdığım pozisyon büyüklüğü hesaplama fonksiyonunun farklı girdiler (farklı risk yüzdeleri, stop mesafeleri) için doğru lot sayısını döndürüp döndürmediğini test eden ayrı bir test kodu yazılabileceğini öğrendim. Birim testlerin, hataları erken aşamada yakalamayı, kodda değişiklik yapıldığında (refactoring sonrası) mevcut işlevselliğin bozulmadığını garantilemeyi (regresyon testi) ve kodun dokümantasyonuna yardımcı olmayı sağladığını kavradım. AlgoTrader ortamında doğrudan birim test framework'ü entegrasyonu olmasa da, test edilebilir kod yazma prensiplerinin (bağımlılıkları azaltma, fonksiyonları küçük tutma) önemini anladım."
+                    },
+                    "06/05/25": {
+                        title: "Yazılım Test Prensipleri: Entegrasyon Testi Kavramı ve Strateji Bağlamı",
+                        description: "Birim testlerin ardından, kodun farklı parçalarının birlikte nasıl çalıştığını test eden Entegrasyon Testi kavramını inceledim. AlgoTrader stratejileri bağlamında bunun, farklı modüllerin (veri alımı, indikatör hesaplama, koşul kontrolü, emir gönderme) bir arada beklendiği gibi çalışıp çalışmadığını test etmek anlamına geldiğini anladım. Örneğin, bir indikatörün hesapladığı değerin, koşul bloğu tarafından doğru algılanıp algılanmadığını ve buna bağlı olarak emir gönderme fonksiyonunun doğru parametrelerle tetiklenip tetiklenmediğini test etmenin bir entegrasyon testi senaryosu olabileceğini düşündüm. Backtest sürecinin aslında bir tür entegrasyon testi olarak da görülebileceğini, çünkü stratejinin tüm bileşenlerinin geçmiş veri üzerinde birlikte çalıştığını fark ettim. Ancak entegrasyon testlerinin daha spesifik senaryoları ve modüller arası etkileşimleri hedeflemesi gerektiğini anladım."
+                    },
+                    "07/05/25": {
+                        title: "AlgoTrader'da Strateji Testi: Backtest'in Bir Test Yöntemi Olarak Kullanımı",
+                        description: "AlgoTrader platformundaki Backtest özelliğinin, geliştirilen stratejilerin geçmiş performansını test etmek için temel araç olduğunu tekrar ettim. Backtest'in, strateji mantığının ve kullanılan indikatörlerin/fonksiyonların belirli bir tarih aralığındaki piyasa verisi üzerinde nasıl çalıştığını simüle ettiğini kavradım. Backtest sonuçlarının (getiri eğrisi, performans metrikleri, işlem listesi) sadece stratejinin potansiyel karlılığını değil, aynı zamanda içerdiği riskleri ve davranış biçimini anlamak için de değerli veriler sunduğunu pekiştirdim. Farklı backtest periyotları (kısa vadeli, uzun vadeli) kullanarak stratejinin farklı piyasa koşullarındaki (trend, yatay) performansını değerlendirmenin önemini anladım. Backtest'in, stratejiyi canlıya almadan önce yapılan önemli bir doğrulama ve test adımı olduğunu, ancak geçmiş performansın gelecek performansın garantisi olmadığını da aklımda tutmam gerektiğini öğrendim."
+                    },
+                    "08/05/25": {
+                        title: "Test Senaryoları Oluşturma: Farklı Piyasa Koşulları (Trend, Yatay, Volatil)",
+                        description: "Bir stratejinin sadece belirli bir piyasa koşulunda değil, farklı koşullarda da nasıl performans gösterdiğini test etmenin önemini öğrendim. Bu amaçla farklı tarih aralıkları seçerek veya farklı semboller kullanarak çeşitli piyasa koşullarını (güçlü yükseliş/düşüş trendleri, uzun süren yatay piyasalar, yüksek/düşük volatilite dönemleri) simüle eden backtest senaryoları oluşturdum. Örneğin, bir trend takip stratejisinin yatay piyasada nasıl \"whipsaw\" (hatalı sinyal) ürettiğini veya bir ortalamaya dönüş (mean reversion) stratejisinin güçlü trendlerde nasıl zarar edebileceğini gözlemledim. Stratejinin hangi piyasa koşullarında daha iyi, hangilerinde daha kötü çalıştığını anlamanın, stratejinin ne zaman kullanılacağına veya ne zaman devre dışı bırakılacağına karar vermede kritik olduğunu fark ettim. Test senaryolarını çeşitlendirmenin, stratejinin zayıf yönlerini ortaya çıkarmada etkili bir yöntem olduğunu anladım."
+                    },
+                    "09/05/25": {
+                        title: "Kenar Durum (Edge Case) Testleri ve Strateji Sağlamlığının Önemi",
+                        description: "Stratejileri test ederken sadece genel piyasa koşullarını değil, aynı zamanda nadir görülen veya beklenmedik durumları (kenar durumlar - edge cases) da göz önünde bulundurmanın önemini öğrendim. Örneğin, piyasanın açılış/kapanış saatleri, tatil günleri, ani fiyat boşlukları (gap), veri akışında anlık kesintiler veya hatalı veriler gibi durumların stratejiyi nasıl etkileyebileceğini düşündüm. Strateji kodunda bu tür durumlar için kontroller (örneğin, gelen verinin geçerliliğini kontrol etmek, emir göndermeden önce hesap bakiyesini tekrar kontrol etmek) eklemenin stratejinin sağlamlığını (robustness) artıracağını anladım. Kenar durumları test etmek için backtest ayarlarında belirli tarih aralıklarını seçmek veya kod içinde bu durumları simüle eden mantıklar eklemek gerekebileceğini fark ettim. Sağlam bir stratejinin, sadece ideal koşullarda değil, beklenmedik durumlarda da öngörülebilir ve kontrol altında davranması gerektiğini kavradım."
+                    }
+                }
+            },
+            "12/05/2025 - 17/05/2025": {
+                 summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">12/05/2025 - 17/05/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">12/05/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Makine Öğrenmesi (ML) Entegrasyonu: Kavramsal Bakış ve MatriksIQ Yapay Zeka Modülü</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">13/05/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Yapay Zeka Modülü: Model Oluşturma Adımları ve Veri Girişleri</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">14/05/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Yapay Zeka Modülü: Hedef Seçimi ve Eğitim/Test Adımları</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">15/05/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">Yapay Zeka Modülü: Model Sonuçlarının Yorumlanması (Metrikler, Backtest)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">16/05/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Yapay Zeka Modelinin AlgoTrader Stratejisinde Kullanımı (Predict())</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">17/05/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">40</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "12/05/25": {
+                        title: "Makine Öğrenmesi (ML) Entegrasyonu: Kavramsal Bakış ve MatriksIQ Yapay Zeka Modülü",
+                        description: "Finansal piyasalarda giderek daha fazla kullanılan Makine Öğrenmesi (ML) tekniklerinin AlgoTrader ile nasıl entegre edilebileceğine dair genel bir bakış edindim. MatriksIQ platformunun kendi içinde bir \"Yapay Zeka Modülü V2\" sunduğunu öğrendim. Bu modülün, kullanıcıların belirli girdiler (fiyat verileri, indikatörler) kullanarak gelecekteki fiyat hareketleri veya belirli olayların gerçekleşme olasılığı hakkında tahminler üreten modeller eğitmelerine olanak tanıdığını anladım. Modülün arka planda çeşitli ML algoritmalarını (FastForest, FastTree, Logistic Regression vb.) kullandığını ve kullanıcıların bu algoritmaları seçerek veya varsayılanı kullanarak modeller oluşturabileceğini gördüm. ML modellerinin, karmaşık ve doğrusal olmayan ilişkileri yakalayarak geleneksel teknik analizin ötesinde öngörüler sunma potansiyeli olduğunu fark ettim."
+                    },
+                    "13/05/25": {
+                        title: "Yapay Zeka Modülü: Model Oluşturma Adımları ve Veri Girişleri",
+                        description: "MatriksIQ Yapay Zeka Modülü V2'yi kullanarak yeni bir model oluşturma adımlarını öğrendim. \"Yapay Zeka\" menüsünden \"Yapay Zeka Modeli Oluşturma\" ekranını açtım. İlk adımda, modelin eğitileceği sembol(ler)i ve periyodu (günlük, 60dk vb.) seçmem gerektiğini gördüm. Ardından, \"Model Girdileri\" bölümünde modele hangi verilerin (özelliklerin/features) girdi olarak verileceğini tanımladım. Buraya OHLC verilerini, çeşitli teknik indikatörleri (EMA, RSI, MACD vb.) veya hatta farklı bir sembolün verilerini ekleyebileceğimi öğrendim. Her bir girdi için kullanılacak OHLC tipini (Kapanış, Açılış vb.) ve indikatör parametrelerini (örn. EMA periyodu) belirleyebildiğimi fark ettim. Son olarak, modelin hangi zaman aralığındaki veriyi kullanarak eğitileceğini (\"Zaman Seçimi\" bölümü - Son N bar, Tüm Barlar, Tarih Aralığı) seçerek ilk adımı tamamladım."
+                    },
+                    "14/05/25": {
+                        title: "Yapay Zeka Modülü: Hedef Seçimi ve Eğitim/Test Adımları",
+                        description: "Model girdilerini belirledikten sonra, modelin neyi tahmin edeceğini tanımlayan \"Tahmin Edilecek Hedef Seçimi\" adımını öğrendim. Modelin, belirli bir süre (Look Ahead Step - örn. 5 bar) içinde, belirlenen bir getiri hedefine (Getiri (%) - örn. %1) ulaşıp ulaşmayacağını tahmin etmesini sağlayabildiğimi gördüm. Hedefin yükseliş mi yoksa düşüş mü olacağını seçebildiğimi (Hedef Seçimi) ve bu süreçte tolere edilecek maksimum kaybı (Maximum Kayıp (%)) belirleyebildiğimi anladım. Ayrıca hedefin, sürecin sonunda mı (MaxDrawdown) yoksa süreç içinde herhangi bir anda mı (IntraMaxDrawdown) gerçekleşeceğine bakılacağını seçen Hedef Fonksiyonu ayarını inceledim. Bu hedefleri belirledikten sonra, bir sonraki adımda (\"Eğitim / Test Adımları\") veri setinin eğitim ve test olarak nasıl bölündüğünü (Eğitim Bölgesi kaydırıcısı) ve Eğit butonuyla model eğitim sürecinin nasıl başlatıldığını öğrendim."
+                    },
+                    "15/05/25": {
+                        title: "Yapay Zeka Modülü: Model Sonuçlarının Yorumlanması (Metrikler, Backtest)",
+                        description: "Yapay Zeka Modülü'nde eğitim tamamlandıktan sonra çıkan sonuç ekranını yorumlamayı öğrendim. \"Eğitim Verileri\" ve \"Test Verileri\" için ayrı ayrı sunulan metrik tablolarını inceledim. Özellikle \"Test Metrikleri\"nin, modelin daha önce görmediği veriler üzerindeki performansını gösterdiği için daha önemli olduğunu anladım. F1 Skoru, Accuracy (Doğruluk), Positive Precision (Pozitif Kesinlik) ve Positive Recall (Pozitif Duyarlılık) gibi metriklerin ne anlama geldiğini ve modelin başarısını değerlendirmede nasıl kullanıldığını öğrendim. Karmaşıklık matrisi (Confusion Matrix - Pozitif/Negatif Tahminler ve Gerçekleşenler) üzerinden modelin hangi durumlarda doğru veya yanlış tahmin yaptığını (TP, FP, TN, FN) görsel olarak analiz ettim. \"Grafikte Göster\" ile tahminlerin grafik üzerinde nasıl işaretlendiğini, \"Backtest\" ile de bu tahminlere dayalı basit bir stratejinin geçmiş performansını nasıl görebileceğimi öğrendim."
+                    },
+                    "16/05/25": {
+                        title: "Yapay Zeka Modelinin AlgoTrader Stratejisinde Kullanımı (Predict())",
+                        description: "Yapay Zeka Modülü ile eğitip kaydettiğim bir modeli, AlgoTrader C# stratejisi içinde nasıl kullanacağımı araştırdım. Kaydedilen modellerin \"Yapay Zeka Modeli AI\" listesinde yer aldığını ve strateji içinden bu modellere referans verilebildiğini gördüm. Modelin tahmin sonucunu almak için (genellikle OnDataUpdate içinde) Predict(modelAdi, Symbol, SymbolPeriod) gibi bir fonksiyonun (veya benzer bir mekanizmanın) kullanılması gerektiğini varsaydım (Yardım dosyasında spesifik Predict fonksiyonu detaylandırılmamış olabilir, ancak genel mantık bu yönde olmalı). Bu fonksiyonun, o anki bar verisine göre modelin daha önce tanımlanan hedef için (örn. 5 bar içinde %1 yükseliş) \"True\" (olası) veya \"False\" (olası değil) şeklinde bir tahmin döndüreceğini anladım. Bu tahmin sonucunu (True/False) stratejinin alım/satım koşulu olarak kullanarak (if (predictionResult == true) { SendMarketOrder(...); }) yapay zeka destekli bir strateji oluşturabileceğimi kavradım."
+                    }
+                }
+            },
+             "19/05/2025 - 24/05/2025": {
+                 summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">19/05/2025 - 24/05/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">19/05/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Resmi Tatil (Atatürk'ü Anma, Gençlik ve Spor Bayramı)</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr><td class="border px-3 py-2">20/05/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Sistem Mimarisi: Veri Depolama ve Erişim Katmanları (Kavramsal)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">21/05/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Sistem Mimarisi: Strateji Motoru ve Emir İletim Sistemi Arasındaki Etkileşim</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">22/05/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">API Kavramı ve MatriksIQ API Olanaklarının Araştırılması (Varsa)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">23/05/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Versiyon Kontrol Sistemleri (Git) Temel Kavramları ve Önemi</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">24/05/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">32</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "20/05/25": {
+                        title: "Sistem Mimarisi: Veri Depolama ve Erişim Katmanları (Kavramsal)",
+                        description: "AlgoTrader ve MatriksIQ gibi karmaşık bir finansal teknoloji platformunun arka planındaki veri yönetimi üzerine düşündüm. Geçmiş bar verilerinin (farklı semboller, periyotlar), indikatör hesaplamaları için hızlı erişilebilir şekilde nasıl depolandığını (muhtemelen zaman serisi veritabanları veya optimize edilmiş dosya sistemleri) araştırdım. Canlı veri akışının (tick data) nasıl alındığını, işlendiğini ve ilgili stratejilere nasıl dağıtıldığını (publish/subscribe veya benzeri bir mekanizma) kavramaya çalıştım. GetBarData() gibi fonksiyonların bu depolama katmanından veriyi nasıl sorguladığını ve getirdiğini, bunun performans üzerindeki etkilerini (veri büyüklüğü, indeksleme) tartıştık. Veri kalitesinin (eksik veri, hatalı veri) önemini ve platformun bu tür durumları nasıl ele alabileceğini (veri temizleme, doldurma) düşündüm. Verimli ve güvenilir veri yönetiminin, algoritmik trading platformlarının temel taşı olduğunu anladım."
+                    },
+                    "21/05/25": {
+                        title: "Sistem Mimarisi: Strateji Motoru ve Emir İletim Sistemi Arasındaki Etkileşim",
+                        description: "Stratejinin C# kodunda yazılan mantığının nasıl yürütüldüğünü ve emir sistemine nasıl iletildiğini kavramsal olarak inceledim. Strateji motorunun (execution engine), OnDataUpdate gibi olayları tetikleyerek strateji kodunu çalıştırdığını, koşullar sağlandığında SendOrder() gibi fonksiyon çağrılarını aldığını düşündüm. Bu emir taleplerinin, ayrı bir emir yönetim sistemine (Order Management System - OMS) iletildiğini, OMS'nin risk kontrollerini (bakiye, pozisyon limiti vb.) yaptığını ve ardından emri Borsa'ya veya ilgili piyasa yapıcısına ilettiğini öğrendim. Emir durum güncellemelerinin (gerçekleşti, iptal edildi vb.) Borsa'dan geri gelip OMS üzerinden tekrar stratejiye (OnOrderUpdate olayı ile) bildirildiği veri akışını modelledim. Bu farklı bileşenler arasındaki iletişimin hızı ve güvenilirliğinin, özellikle yüksek frekanslı stratejiler için kritik olduğunu anladım."
+                    },
+                    "22/05/25": {
+                        title: "API Kavramı ve MatriksIQ API Olanaklarının Araştırılması (Varsa)",
+                        description: "Uygulama Programlama Arayüzü (API) kavramını ve finansal teknolojilerdeki önemini araştırdım. API'ların, farklı yazılım bileşenlerinin veya sistemlerin birbirleriyle iletişim kurmasını ve veri alışverişi yapmasını sağlayan standartlaştırılmış arayüzler olduğunu öğrendim. MatriksIQ platformunun harici uygulamaların veya kullanıcıların kendi geliştirdikleri yazılımların platform verilerine (piyasa verileri, hesap bilgileri vb.) erişmesini veya platform üzerinden emir göndermesini sağlayan bir API sunup sunmadığını araştırdım. Eğer bir API varsa, bunun dokümantasyonunu inceleyerek hangi programlama dillerini desteklediğini (genellikle REST, WebSocket, FIX API gibi standartlar kullanılır), hangi fonksiyonları sunduğunu (veri çekme, emir iletme, hesap bilgisi sorgulama vb.) ve kullanım koşullarını (kimlik doğrulama, hız limitleri) anlamaya çalıştım. API'ların, platformun yeteneklerini genişletmek ve özel çözümler geliştirmek için güçlü bir araç olduğunu fark ettim. (Not: MatriksIQ'nun genel kullanıma açık bir API'si olup olmadığını teyit etmek gerekir.)"
+                    },
+                    "23/05/25": {
+                        title: "Versiyon Kontrol Sistemleri (Git) Temel Kavramları ve Önemi",
+                        description: "Yazılım geliştirme süreçlerinde, özellikle de ekip çalışmalarında veya uzun süreli projelerde kodun geçmiş versiyonlarını takip etmek, değişiklikleri yönetmek ve farklı geliştiricilerin çalışmalarını birleştirmek için kullanılan Versiyon Kontrol Sistemleri (VCS) kavramını öğrendim. En yaygın kullanılan VCS olan Git'in temel mantığını (repository, commit, branch, merge) araştırdım. Kodda yapılan her değişikliğin kaydedilmesi (commit), farklı özellikler veya denemeler için ana koddan bağımsız dallar oluşturulması (branch) ve bu dallardaki değişikliklerin daha sonra ana koda birleştirilmesi (merge) gibi işlemlerin kod yönetimini nasıl kolaylaştırdığını anladım. Strateji geliştirirken farklı versiyonları denemek, önceki bir sürüme geri dönmek veya yapılan değişiklikleri takip etmek için Git gibi bir sistemin kullanılmasının çok faydalı olacağını fark ettim. Kişisel projelerimde Git kullanmaya başlamak için temel komutları (init, add, commit, branch, checkout, merge) öğrenmeye başladım."
+                    }
+                }
+             },
+             "26/05/2025 - 31/05/2025": {
+                 summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">26/05/2025 - 31/05/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">26/05/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Staj Projesi/Ödevi Belirleme ve Kapsam Tanımlama (Varsa)</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">27/05/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Staj Projesi: Literatür Taraması ve Benzer Stratejilerin İncelenmesi</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">28/05/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Staj Projesi: Strateji Tasarımı ve Algoritma Akış Şeması Oluşturma</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">29/05/25</td><td class="border px-3 py-2">Perşembe</td><td class="border px-3 py-2">Staj Projesi: AlgoTrader C# Modülü ile Kodlamaya Başlama</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">30/05/25</td><td class="border px-3 py-2">Cuma</td><td class="border px-3 py-2">Staj Projesi: Temel Fonksiyonların ve Veri Erişiminin Kodlanması</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">31/05/25</td><td class="border px-3 py-2">Cumartesi</td><td class="border px-3 py-2">Tatil Günü</td><td class="border px-3 py-2 text-center">-</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">40</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "26/05/25": {
+                        title: "Staj Projesi/Ödevi Belirleme ve Kapsam Tanımlama (Varsa)",
+                        description: "Stajımın son dönemine girerken, öğrendiklerimi pekiştirmek ve somut bir çıktı oluşturmak amacıyla bir staj projesi/ödevi üzerinde çalışmaya karar verdik. Kurum yetkilim ile görüşerek, hem ilgi alanlarıma hem de şirketin ihtiyaçlarına uygun olabilecek potansiyel proje konularını tartıştık. Örneğin, belirli bir indikatör kombinasyonuna dayalı yeni bir strateji geliştirmek, mevcut bir stratejiyi optimize etmek veya yapay zeka modelini kullanarak bir tahmin sistemi kurmak gibi fikirler değerlendirildi. Sonuç olarak, daha önce üzerinde çalıştığım MOST ve Fisher Transform indikatörlerini birleştirerek ve ek olarak volatilite filtresi ekleyerek daha gelişmiş bir tarama/alım-satım algoritması geliştirmeye karar verdik. Projenin kapsamını, hedeflerini ve teslimat beklentilerini netleştirdik."
+                    },
+                    "27/05/25": {
+                        title: "Staj Projesi: Literatür Taraması ve Benzer Stratejilerin İncelenmesi",
+                        description: "Proje konum belirlendikten sonra, MOST ve Fisher Transform indikatörlerinin birlikte kullanımına ve volatilite filtrelerinin algoritmik işlemlerdeki yerine dair literatür taraması yaptım. İnternet üzerindeki kaynakları, akademik makaleleri (erişebildiklerimi) ve trading forumlarını inceleyerek bu indikatörlerin birleşiminden oluşturulmuş mevcut stratejiler olup olmadığını araştırdım. Benzer yaklaşımların avantajlarını, dezavantajlarını ve potansiyel iyileştirme alanlarını not aldım. Özellikle volatilite filtresi olarak hangi indikatörün (örn. ATR, Standart Sapma) daha uygun olabileceğini ve filtreleme eşiklerinin nasıl belirlenebileceğini araştırdım. Bu tarama, projemin teorik altyapısını oluşturmama ve strateji tasarımında daha bilinçli kararlar almama yardımcı oldu."
+                    },
+                    "28/05/25": {
+                        title: "Staj Projesi: Strateji Tasarımı ve Algoritma Akış Şeması Oluşturma",
+                        description: "Literatür taraması ve önceki bilgilerim ışığında, geliştireceğim stratejinin detaylı tasarımını yaptım. Giriş koşullarını (MOST'un ExMOV'u yukarı kesmesi VE Fisher'in al sinyali vermesi VE ATR belirli bir eşiğin üzerinde olması gibi), çıkış koşullarını (MOST'un aşağı kesmesi VEYA Fisher'in sat sinyali vermesi VEYA Stop-Loss/Take-Profit tetiklenmesi) netleştirdim. Stratejinin mantıksal akışını gösteren bir akış şeması (flowchart) çizdim. Bu şema, OnDataUpdate içinde hangi kontrollerin hangi sıra ile yapılacağını, hangi değişkenlerin kullanılacağını ve hangi fonksiyonların çağrılacağını görselleştirdi. Parametreleri (MOST periyodu, Fisher periyodu, ATR periyodu, ATR eşiği, Stop-Loss yüzdesi, Take-Profit yüzdesi vb.) belirledim ve bunların optimize edilebilir olacağını planladım. Tasarım aşaması, kodlamaya geçmeden önce stratejinin mantığını netleştirmemi sağladı."
+                    },
+                    "29/05/25": {
+                        title: "Staj Projesi: AlgoTrader C# Modülü ile Kodlamaya Başlama",
+                        description: "Tasarladığım stratejiyi AlgoTrader C# modülünde kodlamaya başladım. Yeni bir strateji dosyası oluşturdum ve class ismini belirledim. OnInit() fonksiyonu içine gerekli parametre tanımlamalarını ([Parameter], [DefaultValue]) ve kullanacağım indikatörlerin (MOST, FisherTransform, ATR) tanımlamalarını ekledim. AddSymbol() ile stratejinin çalışacağı sembol ve periyodu kaydettim. WorkWithPermanentSignal(true) ve SendOrderSequential(true) gibi genel ayarları yaptım. OnDataUpdate() fonksiyonunun temel yapısını oluşturdum ve gerekli barDataModel nesnesini GetBarData() ile aldım. Kodun temel iskeletini kurarak, yarın koşul bloklarını ve emir gönderme mantığını eklemeye hazır hale getirdim."
+                    },
+                    "30/05/25": {
+                        title: "Staj Projesi: Temel Fonksiyonların ve Veri Erişiminin Kodlanması",
+                        description: "Dün başladığım strateji kodlamasına devam ettim. OnDataUpdate() fonksiyonu içine, akış şemasında belirlediğim giriş ve çıkış koşullarını if blokları ile yazdım. MOST, Fisher ve ATR indikatörlerinin güncel değerlerine (.CurrentValue, .Fish, .Trigger, .Upper, .Lower gibi) nasıl erişeceğimi ve bunları koşullarda nasıl kullanacağımı uyguladım. CrossAbove ve CrossBelow fonksiyonlarını kullanarak kesişme koşullarını yazdım. Koşullar sağlandığında SendMarketOrder() ile alış veya satış emirlerinin gönderilmesi ve hemen ardından StopLoss() ve TakeProfit() fonksiyonları ile sentetik emirlerin tanımlanması mantığını kodladım. Pozisyon kapatma koşulları (örn. CrossBelow(most, most.ExMOV) veya CrossBelow(ft.Fish, ft.Trigger)) gerçekleştiğinde, öncelikle CancelStopLoss() ve CancelTakeProfit() ile aktif sentetik emirleri iptal edip ardından SendMarketOrder() ile pozisyonu kapatacak kodu yazdım. Stratejinin temel alım-satım ve pozisyon yönetimi mantığını kodlamış oldum."
+                    }
+                }
+             },
+             "02/06/2025 - 04/06/2025": {
+                 summary: `
+                    <h3 class="text-lg font-semibold mb-3 text-center text-gray-700">02/06/2025 - 04/06/2025 Haftalık Çalışma Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 text-sm rounded-md">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="border px-3 py-2 text-left">Tarih</th>
+                                    <th class="border px-3 py-2 text-left">Gün</th>
+                                    <th class="border px-3 py-2 text-left">Yapılan İşler</th>
+                                    <th class="border px-3 py-2 text-center">Süre (Saat)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="border px-3 py-2">02/06/25</td><td class="border px-3 py-2">Pazartesi</td><td class="border px-3 py-2">Staj Projesi: Kodun Test Edilmesi, Debugging ve İyileştirmeler</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">03/06/25</td><td class="border px-3 py-2">Salı</td><td class="border px-3 py-2">Staj Projesi: Backtest Çalıştırma ve Sonuçların Değerlendirilmesi</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr><td class="border px-3 py-2">04/06/25</td><td class="border px-3 py-2">Çarşamba</td><td class="border px-3 py-2">Staj Raporunun Derlenmesi, Son Kontroller ve Teslim Hazırlığı</td><td class="border px-3 py-2 text-center">8</td></tr>
+                                <tr class="font-semibold bg-gray-100"><td class="border px-3 py-2" colspan="3">TOPLAM SÜRE (Saat)</td><td class="border px-3 py-2 text-center">24</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                days: {
+                    "02/06/25": {
+                        title: "Staj Projesi: Kodun Test Edilmesi, Debugging ve İyileştirmeler",
+                        description: "Geliştirdiğim strateji kodunu derledim ve olası derleme hatalarını düzelttim. Ardından, stratejinin mantıksal olarak doğru çalışıp çalışmadığını kontrol etmek için Debug() fonksiyonunu kullanarak kritik noktalara (koşul kontrolleri öncesi/sonrası, emir gönderme öncesi) log mesajları ekledim. Kısa bir tarih aralığı için backtest çalıştırarak debug çıktılarını inceledim. Koşulların doğru tetiklenip tetiklenmediğini, indikatör değerlerinin beklendiği gibi okunup okunmadığını ve emirlerin doğru zamanda gönderilip gönderilmediğini kontrol ettim. Tespit ettiğim mantıksal hataları veya eksiklikleri (örneğin, pozisyon varken tekrar giriş emri göndermeyi engelleme kontrolü) düzelttim. Kodun okunabilirliğini artırmak için bazı yorum satırları ekledim ve kod formatlamasını gözden geçirdim."
+                    },
+                    "03/06/25": {
+                        title: "Staj Projesi: Backtest Çalıştırma ve Sonuçların Değerlendirilmesi",
+                        description: "Hataları ayıklanmış ve iyileştirilmiş stratejimin daha uzun bir tarih aralığı (örneğin son 1 yıl) için backtest'ini çalıştırdım. Farklı semboller (örn. BIST30 içinden birkaç hisse) üzerinde de testler yaparak stratejinin genellenebilirliğini değerlendirmeye çalıştım. Backtest raporunu detaylı olarak inceledim. Toplam getiri, Maksimum Drawdown, Sharpe Oranı, Karlı İşlem Yüzdesi gibi anahtar performans metriklerini not aldım. Stratejinin güçlü ve zayıf yönlerini belirlemeye çalıştım. Özellikle hangi piyasa koşullarında daha iyi veya kötü performans gösterdiğini analiz ettim. Elde ettiğim sonuçların, stratejinin canlı piyasada kullanılabilirliği hakkında bir fikir verdiğini ancak tek başına yeterli olmadığını, daha fazla test ve potansiyel optimizasyon gerektiğini anladım."
+                    },
+                    "04/06/25": {
+                        title: "Staj Raporunun Derlenmesi, Son Kontroller ve Teslim Hazırlığı",
+                        description: "Staj süresince tuttuğum günlük notları ve haftalık çalışma tablolarını bir araya getirerek staj raporunu oluşturdum. Raporun formatının üniversitenin istediği şablona uygunluğunu kontrol ettim. Yapılan işler ve öğrenilen konuları açıklayıcı bir dille yazdım. Özellikle son haftalarda geliştirdiğim proje stratejisinin tasarımını, kodlama adımlarını ve test sonuçlarını rapora ekledim. Staj süresince edindiğim bilgi ve becerileri özetledim. Şirket ve çalışmaları hakkındaki genel izlenimlerimi yazdım. Raporun yazım ve dilbilgisi kontrolünü yaptım. Gerekli imza ve onaylar için raporu kurum yetkilisine sunulacak hale getirdim. Staj sürecinin genel bir değerlendirmesini yaparak edindiğim tecrübelerin kariyer hedeflerime katkısını düşündüm."
+                    }
+                }
+             }
+            // Add more weeks here if needed
+        };
+
+        // =========================================================================
+        // JavaScript Logic (No changes needed here usually)
+        // =========================================================================
+        const weeklyNavContainer = document.getElementById('weekly-navigation');
+        const dailyContentContainer = document.getElementById('daily-content');
+        let activeWeekButton = null; // To track the active week button
+
+        // Function to display daily content
+        function displayDailyContent(weekKey, dayKey) {
+            const dayData = reportData[weekKey]?.days[dayKey]; // Use optional chaining
+            if (dayData) {
+                dailyContentContainer.innerHTML = `
+                    <h3 class="text-lg font-semibold mb-2 text-blue-600">Yapılan İş: ${dayData.title}</h3>
+                    <p class="text-sm font-medium text-gray-600 mb-3">Tarih: ${dayKey}</p>
+                    <div class="text-gray-700 text-sm leading-relaxed">${dayData.description}</div>
+                    <hr class="my-4 border-gray-300">
+                    <div class="text-xs text-gray-500 mt-4 space-y-2">
+                        <p>ÖĞRENCİNİN;<br>İMZASI: _________________________</p>
+                        <p>KURUM SORUMLUSUNUN;<br>ADI VE SOYADI: _________________________ <br>İMZASI: _________________________</p>
+                    </div>
+                `;
+            } else {
+                 dailyContentContainer.innerHTML = `<p class="text-gray-500 italic">Bu gün için detay bulunamadı veya tatil günü.</p>`;
+            }
+             // Scroll the content area to the top after loading new content
+            document.getElementById('daily-content-wrapper').scrollTop = 0;
+        }
+
+        // Function to display weekly summary and day buttons
+        function displayWeek(weekKey, weekButton) {
+             // Remove active state from previously active button
+            if (activeWeekButton) {
+                activeWeekButton.classList.remove('bg-blue-600', 'text-white', 'ring-2', 'ring-offset-2', 'ring-blue-500');
+                activeWeekButton.classList.add('bg-blue-100', 'text-blue-700', 'hover:bg-blue-200');
+            }
+            // Set new active button
+            weekButton.classList.add('bg-blue-600', 'text-white', 'ring-2', 'ring-offset-2', 'ring-blue-500');
+            weekButton.classList.remove('bg-blue-100', 'text-blue-700', 'hover:bg-blue-200');
+            activeWeekButton = weekButton;
+
+
+            const weekData = reportData[weekKey];
+            if (weekData) {
+                let daysHtml = '<div class="space-y-2 mt-4">';
+                // Sort days based on date
+                 const sortedDays = Object.keys(weekData.days).sort((a, b) => {
+                    const [dayA, monthA, yearA] = a.split('/');
+                    const [dayB, monthB, yearB] = b.split('/');
+                    // Assuming YY format means 20YY
+                    const dateA = new Date(`20${yearA}`, monthA - 1, dayA);
+                    const dateB = new Date(`20${yearB}`, monthB - 1, dayB);
+                    return dateA - dateB;
+                });
+
+                sortedDays.forEach(dayKey => {
+                    // Get day name
+                    const [day, month, year] = dayKey.split('/');
+                    const dateObj = new Date(`20${year}`, month - 1, day);
+                     // Handle potential invalid date object if parsing fails
+                    let dayName = 'Bilinmeyen Gün';
+                    try {
+                         dayName = dateObj.toLocaleDateString('tr-TR', { weekday: 'long' });
+                    } catch (e) {
+                        console.error(`Could not parse date: ${dayKey}`, e);
+                    }
+
+
+                    daysHtml += `
+                        <button
+                            onclick="displayDailyContent('${weekKey}', '${dayKey}')"
+                            class="w-full text-left px-3 py-2 text-sm bg-gray-100 hover:bg-gray-300 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                           ${dayKey} - ${dayName} (${weekData.days[dayKey].title})
+                        </button>`;
+                });
+                daysHtml += '</div>';
+
+                // Display weekly summary and day buttons
+                dailyContentContainer.innerHTML = `
+                    <div class="mb-6">${weekData.summary}</div>
+                    <h4 class="text-md font-semibold mb-2 text-gray-700">Günler:</h4>
+                    ${daysHtml}
+                `;
+            } else {
+                 dailyContentContainer.innerHTML = `<p class="text-gray-500 italic">Hafta bilgisi bulunamadı.</p>`;
+            }
+            // Scroll the content area to the top after loading new week
+             document.getElementById('daily-content-wrapper').scrollTop = 0;
+        }
+
+        // Populate weekly navigation
+        Object.keys(reportData).forEach(weekKey => {
+            const weekButton = document.createElement('button');
+            weekButton.textContent = weekKey;
+            weekButton.className = 'w-full text-left px-4 py-2 text-sm font-medium bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500'; // Added focus styles
+            weekButton.onclick = () => displayWeek(weekKey, weekButton);
+            weeklyNavContainer.appendChild(weekButton);
+        });
+
+         // Optional: Display the first week by default when the page loads
+         const firstWeekKey = Object.keys(reportData)[0];
+         if (firstWeekKey) {
+            const firstWeekButton = weeklyNavContainer.querySelector('button');
+            if (firstWeekButton) { // Ensure the button exists
+                 displayWeek(firstWeekKey, firstWeekButton);
+            }
+         }
+
+    </script>
+
+</body>
+</html>
